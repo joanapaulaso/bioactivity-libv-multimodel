@@ -1,0 +1,9 @@
+streamlit
+pandas
+chembl_webresource_client
+numpy
+scikit-learn
+seaborn
+altair
+rdkit
+opencv-python-headless

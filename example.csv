@@ -1,0 +1,21 @@
+O=C(O)CC(O)(C(=O)O)CC(=O)O;id;Citric acid
+O=C(O)CC(O)(C(=O)O)C(C)C;id;Isopropylmalic acid
+O=C(O)CCC(=O)O;id;Succinic acid
+O=C(O)C(O)C(O)C(O)C(O)CO;id;Gluconic acid
+O=C(O)CC(O)C(=O)O;id;Malic acid
+O=C1OC(C(O)=C1O)C(O)CO;id;Ascorbic acid
+O=C(O)CCCCC(O)CC(=O)O;id;Hydroxysuberic acid
+O=C(O)C=C(C(=O)O)CC(=O)O;id;Aconitic acid
+O=C(O)CCNC(=O)C(O)C(C)(C)CO;id;Pantothenic acid
+O=C(O)CCCCCCCC(=O)O;id;Azelaic acid
+OCC1OC(OC2(OC(CO)C(O)C2O)CO)C(O)C(O)C1O;id;Sucrose
+O=C(O)CCCCCCCCC(=O)O;id;Sebacic acid
+O=C(O)C(NC(=O)C)CC=1C=CC=CC1;id;N-acetyl-L-phenylalanine
+O=C1OC(CO)C(O)C(O)C1O;id;Gluconolactone
+O=C(O)CCCCCCC(O)CC(=O)O;id;Hydroxysebacic acid
+O=C1C=2C(O)=CC(OC)=CC2OC(C3=CC=C(O)C=C3)C1;id;Sakuranetin
+O=C(O)C(O)CC=1C=CC=CC1;id;Phenyllactic acid
+O=C(O)C1NCCCC1;id;Pipecolic acid
+O=C1NCCCC1;id;2-piperidone
+NCCCNCCCCN;id;Spermidine
+O=C1OC2(C(=C1)C(C)(C)CC(O)C2)C;id;Loliolide
