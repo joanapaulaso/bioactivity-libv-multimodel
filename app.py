@@ -35,8 +35,8 @@ def main():
     )
 
     # Create tabs for modular workflow
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
-        ["Upload de Dados", "Busca de Alvo", "Classificação", "Análise Gráfica", "Avaliação ADMET", "Geração de Modelos", "Predição"]
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
+        ["Upload de Dados", "Busca de Alvo", "Ensaios", "Classificação", "Análise Gráfica", "Avaliação ADMET", "Geração de Modelos", "Predição"]
     )
 
     with tab1:
@@ -110,6 +110,57 @@ def main():
 
     with tab3:
         if "molecules_processed" in st.session_state:
+            st.header("Triagem de Ensaios")
+            if st.checkbox("Realizar triagem de ensaios"):
+                
+                assay_type_data = {
+                    "Tipo": ["B", "F", "A", "T", "P", "U"],
+                    "Nome": [
+                        "Binding",
+                        "Functional",
+                        "ADME",
+                        "Toxicity",
+                        "Physicochemical",
+                        "Unclassified"
+
+                    ],
+                    "Descrição": [
+                        "Data measuring binding of compound to a molecular target, e.g. Ki, IC50, Kd.",
+                        f"Data measuring the biological effect of a compound, e.g. %cell death in a cell line, rat weight.",
+                        "ADME data e.g. t1/2, oral bioavailability.",
+                        "Data measuring toxicity of a compound, e.g., cytotoxicity.",
+                        "Assays measuring physicochemical properties of the compounds in the absence of biological material e.g., chemical stability, solubility.",
+                        "A small proportion of assays cannot be classified into one of the above categories e.g., ratio of binding vs efficacy."
+                    ]
+                }
+                assay_data_df = pd.DataFrame(assay_type_data)
+                st.table(assay_data_df.to_dict(orient='records'))
+                    
+                    
+            
+                molecules_processed["assay"] = molecules_processed[["assay_type", "assay_description"]].agg(" - ".join, axis = 1)
+                molecules_processed = molecules_processed.drop(["assay_type", "assay_description"], axis = 1)
+                
+                
+                selected_assays = []
+                
+                molecules_processed = st.session_state["molecules_processed"]
+
+                st.write("Ensaios encontrados: ")
+
+                assays = molecules_processed["assay"].unique().tolist()
+                for assay in assays:
+                    if st.checkbox(assay, value=True):
+                        selected_assays.append(assay)
+
+                molecules_assay_selection = molecules_processed[molecules_processed["assay"].isin(selected_assays)]
+                st.write(molecules_assay_selection)
+                st.write(molecules_assay_selection.shape)
+                st.session_state["molecules_processed"] = molecules_assay_selection
+            
+    
+    with tab4:
+        if "molecules_processed" in st.session_state:
             st.header("Classificação de Compostos")
             molecules_processed = st.session_state["molecules_processed"]
 
@@ -135,54 +186,57 @@ def main():
                         mime="text/csv",
                     )
 
-    with tab4:
+    with tab5:
         if "molecules_processed" in st.session_state:
             st.header("Análise Gráfica")
             molecules_processed = st.session_state["molecules_processed"]
 
-            molecules_graph_analysis(molecules_processed)
-            st.header("Teste de Mann-Whitney")
-            df_mannwhitney = mannwhitney(molecules_processed)
-            st.write(df_mannwhitney)
+            if st.button("Realizar Análise Gráfica"):
+            
+                molecules_graph_analysis(molecules_processed)
+                st.header("Teste de Mann-Whitney")
+                df_mannwhitney = mannwhitney(molecules_processed)
+                st.write(df_mannwhitney)
 
-    with tab5:
+    with tab6:
         if "molecules_processed" in st.session_state:
             st.header("Avaliação ADMET")
             molecules_processed = st.session_state["molecules_processed"]
 
-            rules_data = {
-                "Regra": ["Lipinski", "Pfizer", "GSK", "Golden Triangle", "PAINS"],
-                "Descrição": [
-                    "Regra dos 5 de Lipinski",
-                    "Regra de toxicidade da Pfizer",
-                    "Regra da GSK",
-                    "Regra do Triângulo Dourado",
-                    "Filtro de Pan-Assay Interference Compounds",
-                ],
-                "Critérios": [
-                    "MW ≤ 500; LogP ≤ 5; HBA ≤ 10; HBD ≤ 5",
-                    "LogP > 3 e TPSA < 75",
-                    "MW ≤ 400; LogP ≤ 4",
-                    "200 ≤ MW ≤ 500; -2 ≤ LogP ≤ 5",
-                    "Presença de subestruturas problemáticas",
-                ],
-            }
-            rules_df = pd.DataFrame(rules_data)
-            st.table(rules_df)
+            if st.button("Realizar avaliação ADMET"):
+                rules_data = {
+                    "Regra": ["Lipinski", "Pfizer", "GSK", "Golden Triangle", "PAINS"],
+                    "Descrição": [
+                        "Regra dos 5 de Lipinski",
+                        "Regra de toxicidade da Pfizer",
+                        "Regra da GSK",
+                        "Regra do Triângulo Dourado",
+                        "Filtro de Pan-Assay Interference Compounds",
+                    ],
+                    "Critérios": [
+                        "MW ≤ 500; LogP ≤ 5; HBA ≤ 10; HBD ≤ 5",
+                        "LogP > 3 e TPSA < 75",
+                        "MW ≤ 400; LogP ≤ 4",
+                        "200 ≤ MW ≤ 500; -2 ≤ LogP ≤ 5",
+                        "Presença de subestruturas problemáticas",
+                    ],
+                }
+                rules_df = pd.DataFrame(rules_data)
+                st.table(rules_df)
 
-            smiles_list = molecules_processed["canonical_smiles"].tolist()
-            with st.spinner("Realizando avaliação ADMET..."):
-                admet_results = evaluate_admet(smiles_list)
-                if not admet_results.empty:
-                    st.write("Resultados ADMET detalhados:")
-                    st.write(admet_results)
+                smiles_list = molecules_processed["canonical_smiles"].tolist()
+                with st.spinner("Realizando avaliação ADMET..."):
+                    admet_results = evaluate_admet(smiles_list)
+                    if not admet_results.empty:
+                        st.write("Resultados ADMET detalhados:")
+                        st.write(admet_results)
 
-                    summary = summarize_results(admet_results)
-                    st.write("Resumo da avaliação ADMET:")
-                    for rule, result in summary.items():
-                        st.write(f"{rule}: {result}")
+                        summary = summarize_results(admet_results)
+                        st.write("Resumo da avaliação ADMET:")
+                        for rule, result in summary.items():
+                            st.write(f"{rule}: {result}")
 
-    with tab6:
+    with tab7:
         if "molecules_processed" in st.session_state:
             st.header("Geração de Modelos")
             molecules_processed = st.session_state["molecules_processed"]
@@ -267,7 +321,7 @@ def main():
             )
 
         if st.sidebar.button("Predizer"):
-            with tab7:
+            with tab8:
                 st.header("Cálculo de predição:")
                 load_data = pd.read_csv(uploaded_file, sep=";", header=None, names=["SMILES", "ID", "Name"])
                 load_data[["SMILES", "ID"]].to_csv("molecule.smi", sep=" ", header=False, index=False)

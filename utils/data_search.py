@@ -101,6 +101,8 @@ def select_chembl_target(target_chembl_id):
         "canonical_smiles",
         "standard_value",
         "standard_units",
+        "assay_description",
+        "assay_type"
     ]
     df_selected = df_clean[selection]
 
