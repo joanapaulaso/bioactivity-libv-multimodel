@@ -146,7 +146,7 @@ def main():
                 
                 molecules_processed = st.session_state["molecules_processed"]
 
-                st.write("Ensaios encontrados: ")
+                st.write("Ensaios encontrados (Tipo - Descrição): ")
 
                 assays = molecules_processed["assay"].unique().tolist()
                 for assay in assays:
