@@ -22,6 +22,12 @@ from utils.mol_classification import classify_compound
 
 # Interface principal do aplicativo
 def main():
+    
+    if not os.path.isdir("models"):
+        os.mkdir("models")
+    if not os.path.isdir("descriptor_lists"):
+        os.mkdir("descriptor_lists")
+    
     st.set_page_config(layout="wide")
     image = Image.open("logo.png")
     st.image(image, use_column_width=True)
