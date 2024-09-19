@@ -151,17 +151,17 @@ def main():
                 selected_assays = []
                 
                 molecules_processed = st.session_state["molecules_processed"]
-
-                st.write("Ensaios encontrados (Tipo - Descrição): ")
-
                 assays = molecules_processed["assay"].unique().tolist()
+
+                st.write(f" {len(assays)} ensaios encontrados (Tipo - Descrição): ")
+
+                
                 for assay in assays:
                     if st.checkbox(assay, value=True):
                         selected_assays.append(assay)
 
                 molecules_assay_selection = molecules_processed[molecules_processed["assay"].isin(selected_assays)]
-                st.write(molecules_assay_selection)
-                st.write(molecules_assay_selection.shape)
+                st.header(f'Tamanho do dataframe resultante: {len(molecules_assay_selection)}')
                 st.session_state["molecules_processed"] = molecules_assay_selection
             
     
